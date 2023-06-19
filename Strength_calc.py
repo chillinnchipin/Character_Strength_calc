@@ -1,5 +1,5 @@
 #Ronald Hardy Jr
-# V0.0.2 6/18/2023
+# V0.1.0 6/19/2023
 import math
 # TODO: Setup app using flask
 # TODO: intergrate sql with
@@ -54,7 +54,7 @@ import math
 class InvalidInput(Exception):
     pass
 
-def calcPhysical(offenStrn, defenStrn, speed, adgility): return (0.25*offenStrn)+(0.25*defenStrn) + (0.15625*speed) + (2.5 * adgility)
+def calcPhysical(offenStrn, defenStrn, speed, adgility): return (0.25*offenStrn) + (0.25*defenStrn) + (0.15625*speed) + (2.5 * adgility)
 def calcMental(iq, biq, knowl): return (0.25 * iq) + (0.25 * biq) + (0.25 * knowl)
 def calcMagical(manaCap, maxOutput,regenRate): return (0.0004 * manaCap) + (0.0004 * maxOutput) + (0.004 * regenRate)
 
@@ -96,8 +96,8 @@ if __name__ == "__main__":
     while option != 0:
         try:
             print(menu)
-            print("Please enter an option: ", end = '')
-            option = int(input())
+            #print("Please enter an option: ", end = '')
+            option = int(input("Please enter an option: "))
             match option:
                 case 0: break
                 case 1:
@@ -119,6 +119,16 @@ if __name__ == "__main__":
                     numRankLvl = calcNumLvl(powerLvl)
                     print(f'This Character has a Number Rank of: {numRankLvl:.2f}\nTheir Power level: {powerLvl:.0f}')
                     print(f'Other Character Stats:\nMagical Power: {magLvl:.0f}\nPhysical Level: {phsLvl:.0f}\nMental Power: {mentLvl:.0f}')
+                    while option != 0:
+                        print("\nWhat to do next?\n1: Return to main menu\n2: Explain Results\n3: View Character Number Rank\n4: View Character Power Level\n5: Veiw Specific Levels\n6: Save Character")
+                        option = int(input("Please Selection an option:"))
+                        match option:
+                            case 1: break
+                            case 2: print('The number rank is a simpple numerica measurement of a character strength (typicall 0-10) that uses a logarthic equation to easily compare character capabilites\nThe power level is a linear measurement of a character strength that is used to determine a number rank\nThere are three power level for specific aspects: Physical, Magical, and Mental. These are put into a weighted average to determine the power level.\n')
+                            case 3: print(f'Character has a Number Rank of: {numRankLvl:.2f}')
+                            case 4: print(f'Character has a power level of {powerLvl:.0f}')
+                            case 5: print(f'Physical Level: {phsLvl:.0f}\nMagical Level: {magLvl:.0f}\nMental Level: {mentLvl:.0f}')
+                            case 6: raise NotImplementedError
                 case 2: raise NotImplementedError
                 case 3: raise NotImplementedError
                 case 4: raise NotImplementedError
