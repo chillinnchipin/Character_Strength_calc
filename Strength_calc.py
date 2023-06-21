@@ -1,35 +1,18 @@
 #Ronald Hardy Jr
-# V0.1.0 6/19/2023
+# V0.2.0 6/20/2023
 import math
 # TODO: Setup app using flask
 # TODO: intergrate sql with
 # TODO: create docker image & run in container
 
-"""class character:
+class Character:
     # TODO: Finish character class for saving characters
-    def __init__(self):
-        #declares instance stats
-        self.offenStrn = 50
-        self.defenStrn = 50
-        self.speed = 30
-        self.adgility = 4
-        self.manaCap = 1000
-        self.maxOutput = 500
-        self.regenRate = 10
-        self.iq = 100
-        self.biq = 50
-        self.knowl = 50
-
-        #declares instance levels
-        self.phsLvl
-        self.magLvl
-        self.mentlvl
-        self.numLvl
-
-        self.name = 'null'
+    def __init__(self, name, offenStrn = 50, defenStrn = 50, speed = 30, adgility = 4, manaCap = 1000, maxOutput = 500,regenRate = 10, iq = 100, biq = 50, knowl = 50):
+        #instance info
+        self.name = name
         self.spellList = []
-    
-    def __init__(self, offenStrn, defenStrn, speed, adgility, manaCap, maxOutput,regenRate, iq, biq, knowl):
+
+        #instance states
         self.offenStrn = offenStrn
         self.defenStrn = defenStrn
         self.speed = speed
@@ -45,11 +28,34 @@ import math
         self.phsLvl = calcPhysical(offenStrn, defenStrn, speed, adgility)
         self.magLvl = calcMagical(manaCap, maxOutput,regenRate)
         self.mentlvl = calcMental(iq, biq, knowl)
-        self.numLvl = calcPowerLvl(self.phsLvl, self.magLvl, self.mentLvl)
+        self.powerLvl = calcPowerLvl(self.phsLvl, self.magLvl, self.mentlvl)
+        self.numLvl = calcNumLvl(self.powerLvl)
+    
+    def addSpell(self, spell: str):
+        self.spellList.append(spell)
+    def veiwSpells(self):
+        toReturn = ''
+        for spell in self.spellList:
+            toReturn += spell + ', '
+        return toReturn
+    def printSpells(self):
+        for spell in self.spellList:
+            print(spell, end = " ")
+        print()
 
-        self.name = 'null'
-        self.spellList = []"""
-
+    def __str__ (self):
+        toReturn = f"{self.name}\nRank: {self.numLvl:.2f}\nPower Level: {self.powerLvl:.0f}"
+        toReturn += f"\nPhysical Level: {self.phsLvl:.0f}\tMagical Level: {self.magLvl:.0f}\tMental Level: {self.mentlvl:.0f}"
+        toReturn += f"\nOffensive Strength {self.offenStrn:.1f}\tDefensive Strength {self.defenStrn:1f}\tSpeed {self.speed:.2f}\tAcceleration {self.adgility:.2f}"
+        toReturn += f"\nMana Capacity {self.manaCap:.0f}\tMaximum Mana Output {self.maxOutput:.0f}\tMana Regeneration Rate {self.regenRate:.0f}"
+        toReturn += f"\nIQ {self.iq:3f}\tBattle IQ {self.biq:3f}\t World Knowlege {self.knowl:3f}"
+        return toReturn
+    def __lt__(self, other):
+        return self.powerLvl < other.powerLvl
+    def __gt__(self, other):
+        return self.powerLvl > other.powerLvl
+    def __eq__(self, other):
+        return self.name == other.name and self.powerLvl == other.powerLvl
 
 class InvalidInput(Exception):
     pass
@@ -89,10 +95,11 @@ if __name__ == "__main__":
 
     #UI
     # TODO: run user interface for opitions and inputing data
-    # TODO: add character arraylist and ability to add, remove, view, and edit chacters on it
+    # TODO: add character arraylist and ability to add, remove, view, and edit characters on it
     print("Weolcome to Character Strength Calculator! \nUsing the CH Base Magic System's Power Level Rank!")
     option = -1
-    menu = "\n0: Quit\n1: Input Character Stats\n2: View Character Stats & Levels\n3: Edit Chacter Stats\n4: Save Character Data\n5: Load data from file"
+    menu = "\n0: Quit\n1: Input Character Stats\n2: View all saved Characters \n3: View a Character\n4: Edit Character Stats\n5: Save or Load from .txt file"
+    characters = []
     while option != 0:
         try:
             print(menu)
@@ -124,14 +131,58 @@ if __name__ == "__main__":
                         option = int(input("Please Selection an option:"))
                         match option:
                             case 1: break
-                            case 2: print('The number rank is a simpple numerica measurement of a character strength (typicall 0-10) that uses a logarthic equation to easily compare character capabilites\nThe power level is a linear measurement of a character strength that is used to determine a number rank\nThere are three power level for specific aspects: Physical, Magical, and Mental. These are put into a weighted average to determine the power level.\n')
+                            case 2: print('The number rank is a simple numerical measurement of a character strength (typicall 0-10) that uses a logarthic equation to easily compare character capabilites\nThe power level is a linear measurement of a character strength that is used to determine a number rank\nThere are three power level for specific aspects: Physical, Magical, and Mental. These are put into a weighted average to determine the power level.\n')
                             case 3: print(f'Character has a Number Rank of: {numRankLvl:.2f}')
                             case 4: print(f'Character has a power level of {powerLvl:.0f}')
                             case 5: print(f'Physical Level: {phsLvl:.0f}\nMagical Level: {magLvl:.0f}\nMental Level: {mentLvl:.0f}')
-                            case 6: raise NotImplementedError
-                case 2: raise NotImplementedError
-                case 3: raise NotImplementedError
-                case 4: raise NotImplementedError
+                            case 6: 
+                                name = input("Please enter character name: ")
+                                toSave = Character(name, offenStrn, defenStrn, speed, adgility, manaCap, maxOutput,regenRate, iq, biq, knowl)
+                                characters.append(toSave)
+                case 2: 
+                    characters.sort()
+                    print()
+                    for current in characters:
+                        print(current)
+                        print()
+                case 3:
+                    toFind = input("Enter name of character to view: ")
+                    found = False
+                    for current in characters:
+                        if current.name == toFind:
+                            print(current)
+                            found = True
+                            break
+                    if not found: raise InvalidInput
+                case 4:
+                    toFind = input("\nEnter name of character to edit: ")
+                    #toEdit = None
+                    for current in characters:
+                        if current.name == toFind: toEdit = current
+                    #if toEdit == None: raise InvalidInput
+                    while option != 0:
+                        print()
+                        print(toEdit)
+                        print("\nWhat would you like to edit?\n1: Return to Main Menu\n2: Name\n3: Offensive Strength\n4: Defensive Strength\n5: Sprinting Speed\n6: Acceleration\n7: Mana Capacity\n8: Maximum Mana Output\n9: Mana Regeneration Rate\n10: IQ\n11: Battle IQ\n12: Magic & History Test Score")
+                        option = int(input("Please enter an option:"))
+                        match option:
+                            case 1: break
+                            case 2: toEdit.name = input("What would you like to change the name to: ")
+                            case 3: toEdit.offenStrn = int(input(f"{toEdit.name}'s Offensive Strength is {toEdit.offenStrn:4f}\nWhat would you like to change the Offensive Strength to: "))
+                            case 4: toEdit.defenStrn = int(input(f"{toEdit.name}'s Defensive Strength is {toEdit.defenStrn:4f}\nWhat would you like to change the Defensive Strength to: "))
+                            case 5: toEdit.speed = int(input(f"{toEdit.name}'s Sprinting Speed is {toEdit.speed:.2f}\nWhat would you like to change the Sprinting Speed to: "))
+                            case 6: toEdit.adgility = int(input(f"{toEdit.name}'s Acceleration is {toEdit.adgility:.0f}\nWhat would you like to change the Acceleration to: "))
+                            case 7: toEdit.manaCap = int(input(f"{toEdit.name}'s Mana Capacity is {toEdit.manaCap:.0f}\nWhat would you like to change the Mana Capacity to: "))
+                            case 8: toEdit.maxOutput = int(input(f"{toEdit.name}'s Maximum Mana Output is {toEdit.maxOutput:.0f}\nWhat would you like to change the Maximum Mana Output to: "))
+                            case 9: toEdit.regenRate = int(input(f"{toEdit.name}'s  Mana Regeneration Rate is {toEdit.regenRate:.0f}\nWhat would you like to change the  Mana Regeneration Rate to: "))
+                            case 10: toEdit.iq = int(input(f"{toEdit.name}'s IQ is {toEdit.iq:.0f}\nWhat would you like to change the IQ to: "))
+                            case 11: toEdit.biq = int(input(f"{toEdit.name}'s Battle IQ is {toEdit.biq:.0f}\nWhat would you like to change the Battle IQ to: "))
+                            case 12: toEdit.knowl = int(input(f"{toEdit.name}'s Magic & History Test Score is {toEdit.knowl:.0f}\nWhat would you like to change the Magic & History Test Score to: "))
+                        toEdit.phsLvl = calcPhysical(toEdit.offenStrn, toEdit.defenStrn, toEdit.speed, toEdit.adgility)
+                        toEdit.magLvl = calcMagical(toEdit.manaCap, toEdit.maxOutput, toEdit.regenRate)
+                        toEdit.mentlvl = calcMental(toEdit.iq, toEdit.biq, toEdit.knowl)
+                        toEdit.powerLvl = calcPowerLvl(toEdit.phsLvl, toEdit.magLvl, toEdit.mentlvl)
+                        toEdit.numLvl = calcNumLvl(toEdit.powerLvl)
                 case 5: raise NotImplementedError
                 case _: raise InvalidInput
         except InvalidInput:
